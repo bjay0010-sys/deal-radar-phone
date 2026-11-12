@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0906">
+<meta name="color-scheme" content="dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Radar">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="referrer" content="no-referrer">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Deal Radar</title>
+<style>
+:root{--bg:#0b0906;--surface:#16120c;--surface2:#1c170f;--line:#2b2518;--line2:#3d3420;--ink:#f4ebd8;--ink2:#dacfb6;--muted:#9d927c;--gold:#d8b25f;--gold2:#efcf86;--tint:#2a2112;--ok:#7fd0a0;--okbg:#16301f;--warn:#e0b25a;--warnbg:#332512;--bad:#e69090;--badbg:#331919;--serif:Georgia,'Iowan Old Style','Times New Roman',serif;--sans:-apple-system,system-ui,'Segoe UI',Roboto,Arial,sans-serif;--safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 var(--sans);overscroll-behavior-y:none}
+body{min-height:100dvh;background:radial-gradient(700px 420px at 90% -6%,rgba(216,178,95,.16),transparent 62%),var(--bg)}
+button{font:inherit;color:inherit}
+.lock{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;padding:calc(var(--safe-t) + 18px) 22px calc(var(--safe-b) + 14px);background:var(--bg);overflow:auto}
+.lock main{margin:auto 0;max-width:420px;width:100%;align-self:center}
+.lock .top{display:flex;align-items:center;gap:.7rem;font:700 1.1rem var(--serif)}
+.lock .logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--gold2),var(--gold));display:grid;place-items:center;color:#241b08;font-size:1.2rem}
+.lock h1{font:700 2rem var(--serif);margin:.2rem 0 .3rem}.lock .sub{color:var(--muted);margin:0 0 1.2rem}
+.lock .field{position:relative;margin-bottom:.8rem}.lock input{width:100%;padding:.9rem 4.2rem .9rem 1rem;border-radius:14px;border:1px solid var(--line2);background:#0f0c08;color:var(--ink);font-size:1rem}
+.lock input:focus{outline:2px solid var(--gold);outline-offset:1px}
+.lock .eye{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--gold2);padding:.5rem;font-size:.9rem}
+.cta{width:100%;padding:.95rem;border-radius:14px;border:0;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#241b08;font-weight:700;font-size:1rem}
+.cta:disabled{opacity:.55}.link{background:none;border:0;color:var(--gold2);padding:.8rem;margin:.4rem auto 0;display:block;font-size:.95rem}
+.msg{min-height:1.4em;margin-top:.8rem;color:var(--ink2);font-size:.92rem;text-align:center}.msg.err{color:var(--bad)}
+.fine{color:var(--muted);font-size:.78rem;text-align:center;margin-top:1rem}.tip2{color:var(--warn);font-size:.85rem;margin-top:1rem}
+.orb{display:block;margin:.4rem auto 1.2rem;width:104px;height:104px;border-radius:50%;border:1px solid var(--line2);background:radial-gradient(circle at 30% 25%,#2a2112,#120f08);color:var(--gold2);padding:24px}
+button.orb:active{transform:scale(.96)}.orb svg{width:100%;height:100%}
+#app{min-height:100dvh}
+.upd{position:fixed;left:12px;right:12px;bottom:calc(var(--safe-b) + 74px);z-index:40;background:var(--tint);border:1px solid var(--gold);border-radius:14px;padding:.7rem 1rem;color:var(--gold2);display:none;font-size:.92rem}
+.upd.on{display:block}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="upd" class="upd" role="status"></div>
+<script src="loader.js"></script>
+</body>
+</html>
