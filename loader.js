@@ -156,7 +156,7 @@
     async op(path, body) {
       const op = { opId: uid(), path, body: body || {}, at: Date.now() };
       this.pending.push({ id: op.opId, env: await Seal.seal(this.key, op), sent: 0 }); await kvSet('pending', this.pending);
-      await this.reapply(); this._fire(); this.flush().catch(() => {}); return op.opId;
+      await this.reapply(); this._fire(); this._fast = Date.now() + 40000; this.flush().catch(() => {}); return op.opId;
     },
     async flush() {
       let sentAny = false;
@@ -181,7 +181,7 @@
       if (stuck.length) { const inbox = await this.gh('GET', `/repos/${this.cfg.repo}/contents/inbox`); const names = new Set(Array.isArray(inbox.data) ? inbox.data.map((f) => f.name) : []); for (const p of stuck) if (!names.has(p.id + '.enc')) p.sent = 0; await kvSet('pending', this.pending); }
       return changed;
     },
-    _fireUpdate() { const u = document.getElementById('upd'); if (!u) return; u.textContent = 'Deal Radar was updated on your PC. Tap to load the new version.'; u.classList.add('on'); u.onclick = () => location.reload(); },
+    _fireUpdate() { const u = document.getElementById('upd'); if (!u) return; u.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg><span>Updated on your PC. Tap to load it.</span>'; u.setAttribute('role', 'button'); u.tabIndex = 0; u.classList.add('on'); u.onclick = () => location.reload(); },
     async syncNow() {
       if (this.syncing || !this.key) return; this.syncing = true;
       try { await this.flush(); const changed = await this.pull(); this.error = null; if (changed) { await this.reapply(); this._fire(); } else this._fire(); }
@@ -210,7 +210,7 @@
   const passField = (ph) => { const inp = h('input', { type: 'password', placeholder: ph || 'Passcode', autocomplete: 'current-password', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'go', 'aria-label': 'Passcode' }); const eye = h('button', { class: 'eye', type: 'button', 'aria-label': 'Show passcode', onclick: () => { const sh = inp.type === 'password'; inp.type = sh ? 'text' : 'password'; eye.textContent = sh ? 'Hide' : 'Show'; inp.focus(); } }, 'Show'); return { inp, el: h('div', { class: 'field' }, inp, eye) }; };
 
   let started = false;
-  async function done() { stripHash(); gate.remove(); await start(); }
+  async function done() { stripHash(); gate.classList.add('leave'); setTimeout(() => gate.remove(), 280); await start(); }
   async function afterUnlock() { if (faceOk && !DR.hasFace && !(await DR.faceDeclined())) return offer(); return done(); }
   function faceScreen(auto) {
     const fb = orb('button', { type: 'button', 'aria-label': 'Unlock with Face ID' }); let busy = false;
@@ -254,7 +254,7 @@
     };
     let ran = false; const go = () => { if (ran) return; if (!DR.ui) { run(); return; } ran = true; run(); };
     go(); DR.onChange(() => { if (!ran && DR.ui) go(); });
-    setInterval(tick, 45000); window.addEventListener('online', tick); DR.syncNow();
+    const loop = () => setTimeout(() => { tick(); loop(); }, DR._fast && Date.now() < DR._fast ? 2000 : 6000); loop(); window.addEventListener('online', tick); DR.syncNow();
     let hiddenAt = 0;
     document.addEventListener('visibilitychange', () => { if (document.hidden) hiddenAt = Date.now(); else { if (hiddenAt && Date.now() - hiddenAt > DR.lockMs()) DR.lock(); else tick(); hiddenAt = 0; } });
   }
